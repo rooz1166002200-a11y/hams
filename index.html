@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>همس الكوب — بُراق مُحمد</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 48%, #e0f2fe 100%);
+      color: #0c4a6e;
+      padding: 22px 14px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      text-align: center;
+      padding: 6px 8px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    header h1 {
+      font-size: 1.55rem;
+      color: #0369a1;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 0.92rem;
+      color: #475569;
+    }
+
+    .card {
+      width: 100%;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+      border: 1.5px solid #bae6fd;
+      border-radius: 22px;
+      padding: 20px 18px;
+      box-shadow: 0 8px 22px rgba(14, 165, 233, 0.07);
+    }
+
+    .stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .cup-wrap {
+      position: relative;
+      width: 132px;
+      height: 158px;
+      border: 3px solid #7dd3fc;
+      border-top: none;
+      border-radius: 0 0 26px 26px;
+      background: rgba(255, 255, 255, 0.7);
+      overflow: hidden;
+      box-shadow: inset 0 -6px 14px rgba(2, 132, 199, 0.08);
+    }
+
+    .air-space {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #0369a1;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .water {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 30%;
+      background: linear-gradient(180deg, rgba(125, 211, 252, 0.88), rgba(2, 132, 199, 0.88));
+      transition: height 0.25s ease;
+    }
+
+    .water.tea-mode {
+      background: linear-gradient(180deg, rgba(217, 119, 6, 0.72), rgba(146, 64, 14, 0.85));
+    }
+
+    .ripple {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 16px;
+      height: 6px;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      transform: translateX(-50%) scale(0.4);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ripple.animate {
+      animation: rippleAnim 0.55s ease-out;
+    }
+
+    @keyframes rippleAnim {
+      0% {
+        opacity: 0.95;
+        transform: translateX(-50%) scale(0.4);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(-50%) scale(3.4);
+      }
+    }
+
+    .liquid-switch {
+      display: flex;
+      gap: 8px;
+      background: #e0f2fe;
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid #bae6fd;
+    }
+
+    .switch-btn {
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: #0369a1;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .switch-btn.active {
+      background: #ffffff;
+      color: #0284c7;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.14);
+    }
+
+    .readout {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #0c4a6e;
+      font-weight: 700;
+    }
+
+    .controls {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.88rem;
+      color: #0369a1;
+      font-weight: 600;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #0284c7;
+      cursor: pointer;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .action-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .action-btn:active {
+      transform: scale(0.97);
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.22);
+    }
+
+    .secondary-btn {
+      background: #ffffff;
+      color: #0369a1;
+      border: 1.5px solid #bae6fd;
+    }
+
+    .physics-section h2,
+    .summary-box h2 {
+      font-size: 1.08rem;
+      color: #0369a1;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .physics-item {
+      margin-bottom: 12px;
+      line-height: 1.75;
+      font-size: 0.91rem;
+      color: #1e293b;
+    }
+
+    .physics-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .physics-item strong {
+      color: #0284c7;
+    }
+
+    .summary-box {
+      background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%);
+      border: 1.5px solid #7dd3fc;
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .summary-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #0f172a;
+      line-height: 1.65;
+    }
+
+    .summary-box li::before {
+      content: "• ";
+      color: #0284c7;
+      font-weight: bold;
+    }
+
+    footer {
+      width: 100%;
+      max-width: 540px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #475569;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid #bae6fd;
+      border-radius: 14px;
+      padding: 12px 14px;
+      line-height: 1.75;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">وسيلة تعليمية سمعية وبصرية تفاعلية</div>
+      <h1>همس الكوب: كيف يَروي الماء حكاية الفيزياء؟</h1>
+      <p>جرّب سكب الماء أو الشاي وراقب بعينك وأذنك كيف يتغيّر الصوت مع الامتلاء</p>
+    </header>
+
+    <section class="card stage">
+      <div class="liquid-switch" role="group" aria-label="اختيار السائل">
+        <button class="switch-btn active" id="waterModeBtn">💧 الماء</button>
+        <button class="switch-btn" id="teaModeBtn">☕ الشاي</button>
+      </div>
+
+      <div class="cup-wrap" aria-label="كوب تفاعلي">
+        <div class="air-space" id="airLabel">عمود الهواء: 70%</div>
+        <div class="water" id="water">
+          <div class="ripple" id="ripple"></div>
+        </div>
+      </div>
+
+      <div class="readout" id="readout">مستوى السائل: 30% — نبرة عميقة وهادئة</div>
+
+      <div class="controls">
+        <div class="slider-row">
+          <div class="slider-labels">
+            <span>مستوى امتلاء الكوب</span>
+            <span id="levelVal">30%</span>
+          </div>
+          <input type="range" id="levelSlider" min="5" max="95" value="30" />
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-labels">
+            <span>سرعة تساقط القطرات</span>
+            <span id="rateVal">هادئة</span>
+          </div>
+          <input type="range" id="rateSlider" min="1" max="5" value="2" />
+        </div>
+
+        <div class="btn-row">
+          <button class="action-btn primary-btn" id="toggleBtn">تشغيل السكب</button>
+          <button class="action-btn secondary-btn" id="singleBtn">قطرة واحدة</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card physics-section">
+      <h2>التفسير الفيزيائي للظاهرة</h2>
+
+      <div class="physics-item">
+        <strong>1. لماذا يظهر الصوت أصلاً؟</strong>
+        عند سقوط قطرات الماء أو صبّ الشاي داخل الكوب، تصطدم الجزيئات بسطح السائل وجدران الكوب؛ هذا الارتطام يولّد <strong>اهتزازات ميكانيكية</strong> تنتقل إلى عمود الهواء المحصور فوق السائل داخل الكوب، فتنتشر كموجات صوتية تصل إلى أذنك.
+      </div>
+
+      <div class="physics-item">
+        <strong>2. لماذا تتغيّر النبرة مع امتلاء الكوب؟</strong>
+        الفراغ المملوء بالهواء فوق السائل يعمل كـ <strong>حجرة رنين صوتية</strong>. عندما يكون الكوب شبه فارغ، يكون عمود الهواء طويلاً فتهتز موجاته ببطء وتُصدر صوتاً أعمق وأغلظ (تردد منخفض). وكلما ارتفع مستوى الماء أو الشاي، يقصر عمود الهواء وتزداد سرعة اهتزازه، فترتفع النبرة وتصبح أحدّ وأوضح (تردد أعلى).
+      </div>
+
+      <div class="physics-item">
+        <strong>3. الفرق بين الماء والشاي (أثر الحرارة):</strong>
+        في الماء البارد أو المعتدل، تكون حركة الجزيئات أهدأ وتماسك السطح أعلى قليلاً، بينما في <strong>الشاي الساخن</strong> تتحرك جزيئات السائل والهواء فوقه بسرعة أكبر، مما يجعل الرنين الصوتي أنعم وأسرع تغيّراً عند السكب.
+      </div>
+    </section>
+
+    <section class="summary-box">
+      <h2>خلاصة الفكرة</h2>
+      <ul>
+        <li><strong>مصدر الصوت:</strong> ارتطام القطرات بالسائل يولّد اهتزازات في عمود الهواء داخل الكوب.</li>
+        <li><strong>سرّ تغيّر النبرة:</strong> كلما قلّ الفراغ الهوائي وارتفع السائل، زاد التردد وأصبحت النبرة أعلى.</li>
+        <li><strong>تطبيق حياتي:</strong> لهذا السبب تستطيع تمييز اقتراب الكوب من الامتلاء بالسمع فقط دون النظر إليه!</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer>
+    <div>إعداد الطالبة: <strong>بُراق مُحمد</strong> — قسم الرياضيات / المرحلة الثالثة</div>
+    <div>بإشراف: <strong>د. علي المهنا</strong></div>
+  </footer>
+
+  <script>
+    const waterEl = document.getElementById("water");
+    const rippleEl = document.getElementById("ripple");
+    const airLabel = document.getElementById("airLabel");
+    const readoutEl = document.getElementById("readout");
+    const levelSlider = document.getElementById("levelSlider");
+    const rateSlider = document.getElementById("rateSlider");
+    const levelVal = document.getElementById("levelVal");
+    const rateVal = document.getElementById("rateVal");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const singleBtn = document.getElementById("singleBtn");
+    const waterModeBtn = document.getElementById("waterModeBtn");
+    const teaModeBtn = document.getElementById("teaModeBtn");
+
+    const rateNames = ["", "بطيئة جداً", "هادئة", "متوسطة", "سريعة", "متدفقة"];
+    const rateIntervals = [0, 1400, 900, 560, 340, 210];
+
+    let audioCtx = null;
+    let timerId = null;
+    let isRunning = false;
+    let isTea = false;
+
+    function getLevel() {
+      return Number(levelSlider.value);
+    }
+
+    function getRate() {
+      return Number(rateSlider.value);
+    }
+
+    function updateUI() {
+      const lvl = getLevel();
+      const rt = getRate();
+      const air = 100 - lvl;
+
+      waterEl.style.height = `${lvl}%`;
+      levelVal.textContent = `${lvl}%`;
+      airLabel.textContent = `عمود الهواء: ${air}%`;
+      rateVal.textContent = rateNames[rt];
+
+      let toneDesc = "نبرة متوسطة ومتوازنة";
+      if (lvl < 35) toneDesc = "نبرة أعمق (عمود هواء طويل)";
+      else if (lvl > 70) toneDesc = "نبرة أعلى وأحدّ (قرب الامتلاء)";
+
+      const liquidName = isTea ? "الشاي" : "الماء";
+      readoutEl.textContent = `مستوى ${liquidName}: ${lvl}% — ${toneDesc}`;
+    }
+
+    function playDroplet() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        if (!audioCtx) audioCtx = new AudioContextClass();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        const lvl = getLevel();
+        const baseFreq = (isTea ? 290 : 255) + (lvl / 100) * 430;
+
+        osc.type = isTea ? "triangle" : "sine";
+        osc.frequency.setValueAtTime(baseFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.42, now + 0.14);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.18, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.24);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.25);
+      }
+
+      rippleEl.classList.remove("animate");
+      void rippleEl.offsetWidth;
+      rippleEl.classList.add("animate");
+    }
+
+    function startLoop() {
+      stopLoop();
+      isRunning = true;
+      toggleBtn.textContent = "إيقاف السكب";
+      const delay = rateIntervals[getRate()] || 800;
+      playDroplet();
+      timerId = setInterval(playDroplet, delay);
+    }
+
+    function stopLoop() {
+      isRunning = false;
+      toggleBtn.textContent = "تشغيل السكب";
+      if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+    }
+
+    waterModeBtn.addEventListener("click", () => {
+      isTea = false;
+      waterModeBtn.classList.add("active");
+      teaModeBtn.classList.remove("active");
+      waterEl.classList.remove("tea-mode");
+      updateUI();
+      playDroplet();
+    });
+
+    teaModeBtn.addEventListener("click", () => {
+      isTea = true;
+      teaModeBtn.classList.add("active");
+      waterModeBtn.classList.remove("active");
+      waterEl.classList.add("tea-mode");
+      updateUI();
+      playDroplet();
+    });
+
+    levelSlider.addEventListener("input", updateUI);
+    rateSlider.addEventListener("input", () => {
+      updateUI();
+      if (isRunning) startLoop();
+    });
+
+    toggleBtn.addEventListener("click", () => {
+      if (isRunning) stopLoop();
+      else startLoop();
+    });
+
+    singleBtn.addEventListener("click", playDroplet);
+
+    updateUI();
+  </script>
+</body>
+</html>
